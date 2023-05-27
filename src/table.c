@@ -225,6 +225,9 @@ extern void Table_print(const Table_t table) {
             List_print(*(table->buckets + i), NULL);
         }
     }
+    else {
+        warn_with_user_msg(__func__, "provided table is NULL");
+    }
 
     /* ================ */
 
@@ -253,15 +256,7 @@ int Table_remove(const Table_t table, const Data data) {
             code = table->hash(data, table->n_buckets);
             
             /* Find a node with the specified data */
-            if ((removed_data = List_remove_node(*(table->buckets + code), List_find(*(table->buckets + code), data))) != NULL) {
-
-                /* Delete data if needed */
-                if ((table->flags & IS_DESTROY_SET) > 0) {
-                    free(removed_data);
-                }
-
-                result = 0;
-            }
+            result = List_remove_node(*(table->buckets + code), List_find(*(table->buckets + code), data));
         }
     }
 
