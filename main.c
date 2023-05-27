@@ -12,8 +12,6 @@ int int_match(const Data data_1, const Data data_2) {
 int main(int argc, char** argv) {
     Table_t table = NULL;
 
-    int* x = NULL;
-
     time_t t;
 
     srand((unsigned) time(&t));
@@ -22,18 +20,23 @@ int main(int argc, char** argv) {
 
     if ((table = Table_create(11, hash_int, NULL, print_int, int_match)) != NULL) {
 
-        for (size_t i = 0; i < 9; i++) {
+        for (size_t i = 0; i < sizeof(array) / sizeof(array[0]); i++) {
             Table_insert(table, &array[i]);
         }
 
         Table_print(table);
+
+        Table_remove(table, (array + 3));
+        Table_print(table);
+
+        if (Table_is_flag_set(table, IS_PRINT_SET | IS_HASH_SET | IS_MATCH_SET | IS_DESTROY_SET)) {
+            printf("Ok\n");
+        }
     }
 
-    Table_remove(table, &array[5]);
+    Table_destroy(&table);
 
     Table_print(table);
-
-    Table_destroy(&table);
 
     return EXIT_SUCCESS;
 }
